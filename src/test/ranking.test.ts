@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { normalizeRanking } from '../utils/ranking';
-import { maskMiddleName } from '../utils/nameMask';
 
 describe('ranking utilities', () => {
   it('recalculates ranks with shared rank for ties', () => {
@@ -16,10 +15,5 @@ describe('ranking utilities', () => {
       { rank: 1, number: 2, name: '정하린', totalPoints: 44 },
       { rank: 3, number: 3, name: '박민수', totalPoints: 20 },
     ]);
-  });
-
-  it('masks middle characters in Korean names', () => {
-    expect(maskMiddleName('김도현')).toBe('김○현');
-    expect(maskMiddleName('이솔')).toBe('이○');
   });
 });

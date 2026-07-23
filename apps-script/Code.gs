@@ -2,7 +2,6 @@ const KIOSK_SPREADSHEET_ID = '18slLM4XjMQ1p5cBs9etWSWZ5BtKWk_Zap13yZ_85ftk';
 const POINT_SPREADSHEET_ID = '1I3sSPK4IKvlG_0IbMKriqavUOIhAVMkPo3r55SWWwcE';
 const TIMEZONE = 'Asia/Seoul';
 const LOCALE = 'ko_KR';
-const STUDENT_NAME_MODE = 'MASK_MIDDLE'; // 'FULL'로 변경하면 전체 이름 표시
 const CACHE_SECONDS = 45;
 
 const SHEETS = {
@@ -434,17 +433,7 @@ function ddayLabel_(today, targetDate) {
 }
 
 function displayStudentName_(name) {
-  if (STUDENT_NAME_MODE === 'FULL') {
-    return name;
-  }
-  const trimmed = String(name || '').trim();
-  if (trimmed.length <= 1) {
-    return trimmed;
-  }
-  if (trimmed.length === 2) {
-    return trimmed.charAt(0) + '○';
-  }
-  return trimmed.charAt(0) + '○'.repeat(trimmed.length - 2) + trimmed.charAt(trimmed.length - 1);
+  return String(name || '').trim();
 }
 
 function createResponse_(payload, callback) {

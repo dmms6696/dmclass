@@ -64,7 +64,7 @@ VITE_KIOSK_API_URL=https://script.google.com/macros/s/배포ID/exec
 - 포인트 시트를 공개 공유하지 마세요.
 - 서비스 계정 JSON, Google 인증 토큰, API 키를 저장소에 넣지 마세요.
 - `password_code`는 Apps Script 응답에 포함되지 않습니다.
-- 학생 이름은 기본값으로 가운데 글자가 `○`로 가려집니다. 전체 이름이 필요할 때만 `apps-script/Code.gs` 상단의 `STUDENT_NAME_MODE`를 `FULL`로 바꾸세요.
+- 포인트 순위에는 학생 이름 전체가 표시됩니다. `password_code` 등 민감 열은 Apps Script 응답에 포함되지 않습니다.
 
 ## 주요 파일
 
