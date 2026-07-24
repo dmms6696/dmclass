@@ -58,14 +58,15 @@ function buildKioskPayload_() {
   const today = getTodayKey_();
   const kioskSpreadsheet = SpreadsheetApp.openById(KIOSK_SPREADSHEET_ID);
   const pointSpreadsheet = SpreadsheetApp.openById(POINT_SPREADSHEET_ID);
+  const academicEvents = readAcademicEvents_(kioskSpreadsheet);
 
   return {
     ok: true,
     generatedAt: formatNowIso_(),
     timezone: TIMEZONE,
-    dday: readDday_(kioskSpreadsheet, today),
+    dday: buildUpcomingEventDday_(academicEvents, today),
     notices: readNotices_(kioskSpreadsheet, today),
-    academicEvents: readAcademicEvents_(kioskSpreadsheet),
+    academicEvents: academicEvents,
     pointRanking: readPointRanking_(pointSpreadsheet),
   };
 }
@@ -174,44 +175,42 @@ function yesNoRule_() {
     .build();
 }
 
-function readDday_(spreadsheet, today) {
-  const sheet = spreadsheet.getSheetByName(SHEETS.dday);
-  if (!sheet) {
-    return null;
-  }
-
-  const rows = rowsWithHeader_(sheet, 1);
-  const candidates = rows.map(function (row) {
-    const targetDate = dateKey_(row['목표일']);
-    if (!isYes_(row['사용']) || !row['제목'] || !targetDate) {
-      return null;
-    }
-    return {
-      title: String(row['제목']).trim(),
-      targetDate: targetDate,
-      label: ddayLabel_(today, targetDate),
-      icon: String(row['아이콘'] || '⭐').trim(),
-      memo: String(row['메모'] || '').trim(),
-      priority: toNumber_(row['우선순위'], 999),
-    };
-  }).filter(Boolean);
-
-  candidates.sort(function (a, b) {
-    return a.priority - b.priority || Math.abs(daysBetween_(today, a.targetDate)) - Math.abs(daysBetween_(today, b.targetDate));
+function buildUpcomingEventDday_(events, today) {
+  const upcomingEvents = events.filter(function (event) {
+    return event.date >= today;
+  }).sort(function (a, b) {
+    return a.date.localeCompare(b.date) || a.order - b.order || a.title.localeCompare(b.title);
   });
 
-  if (candidates.length === 0) {
+  if (upcomingEvents.length === 0) {
     return null;
   }
 
-  const selected = candidates[0];
+  const selected = upcomingEvents[0];
   return {
     title: selected.title,
-    targetDate: selected.targetDate,
-    label: selected.label,
-    icon: selected.icon,
-    memo: selected.memo,
+    targetDate: selected.date,
+    label: ddayLabel_(today, selected.date),
+    icon: academicEventIcon_(selected.category),
+    memo: selected.details || selected.category,
   };
+}
+
+function academicEventIcon_(category) {
+  const normalized = String(category || '').trim();
+  if (normalized.indexOf('시험') >= 0) {
+    return '📝';
+  }
+  if (normalized.indexOf('행사') >= 0) {
+    return '🎉';
+  }
+  if (normalized.indexOf('방학') >= 0 || normalized.indexOf('휴업') >= 0) {
+    return '☀️';
+  }
+  if (normalized.indexOf('학교') >= 0) {
+    return '🏫';
+  }
+  return '📅';
 }
 
 function readNotices_(spreadsheet, today) {

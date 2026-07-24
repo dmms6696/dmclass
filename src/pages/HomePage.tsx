@@ -4,6 +4,7 @@ import DDayCard from '../components/DDayCard';
 import HomeMenuButton from '../components/HomeMenuButton';
 import NoticeCard from '../components/NoticeCard';
 import type { KioskData } from '../types/kiosk';
+import { selectUpcomingAcademicEventDday } from '../utils/dday';
 
 type KioskState = {
   data: KioskData | null;
@@ -34,6 +35,8 @@ export default function HomePage({ kiosk, onCalendar, onRanking }: Props) {
     );
   }
 
+  const upcomingDday = selectUpcomingAcademicEventDday(kiosk.data?.academicEvents ?? []);
+
   return (
     <section className="home-page">
       <DateTimeHeader />
@@ -45,7 +48,7 @@ export default function HomePage({ kiosk, onCalendar, onRanking }: Props) {
         </div>
       ) : (
         <>
-          <DDayCard dday={kiosk.data?.dday} />
+          <DDayCard dday={upcomingDday} />
           <NoticeCard notices={kiosk.data?.notices ?? []} />
         </>
       )}

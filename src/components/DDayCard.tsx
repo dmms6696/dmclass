@@ -9,7 +9,7 @@ export default function DDayCard({ dday }: Props) {
   if (!dday) {
     return (
       <section className="dday-card panel">
-        <EmptyState title="등록된 디데이가 없어요" description="디데이 시트에서 사용할 행을 Y로 바꿔 주세요." />
+        <EmptyState title="다가오는 학사 일정이 없어요" description="학사일정 시트에 오늘 이후 일정을 등록해 주세요." />
       </section>
     );
   }
