@@ -7,8 +7,6 @@ type Props = {
 };
 
 export default function NoticeCard({ notices }: Props) {
-  const visibleNotices = notices.slice(0, 5);
-
   return (
     <section className="notice-card panel" aria-label="오늘의 알림">
       <div className="section-title">
@@ -16,11 +14,11 @@ export default function NoticeCard({ notices }: Props) {
         <h2>오늘의 알림</h2>
       </div>
 
-      {visibleNotices.length === 0 ? (
+      {notices.length === 0 ? (
         <EmptyState title="오늘은 특별한 알림이 없어요 ✨" description="편안한 하루를 보내요." />
       ) : (
-        <ul className="notice-list">
-          {visibleNotices.map((notice, index) => (
+        <ul className="notice-list" aria-label="오늘의 알림 목록" tabIndex={0}>
+          {notices.map((notice, index) => (
             <li key={`${notice.message}-${index}`} className={notice.important ? 'important' : ''}>
               <span className="notice-dot">
                 {notice.important ? <Sparkles aria-hidden="true" /> : '·'}

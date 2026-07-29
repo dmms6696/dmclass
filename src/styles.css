@@ -192,11 +192,37 @@ button {
   display: grid;
   align-content: start;
   gap: clamp(10px, 1.6dvh, 18px);
+  flex: 1;
   min-height: 0;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
+  padding: 0 6px 2px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #b8a9c7 transparent;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
   list-style: none;
+}
+
+.notice-list:focus-visible {
+  outline: 3px solid #9279d8;
+  outline-offset: 4px;
+}
+
+.notice-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notice-list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #b8a9c7;
+}
+
+.notice-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .notice-list li {
