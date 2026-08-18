@@ -53,9 +53,7 @@ export default function HomePage({ kiosk, onCalendar }: Props) {
         </div>
       ) : (
         <>
-          <div className="home-info-grid">
-            <NoticeCard notices={kiosk.data?.notices ?? []} />
-
+          <div className="home-info-grid home-info-grid-readable">
             <section className="home-summary-panel timetable-summary panel" aria-label="오늘의 시간표">
               <div className="section-title">
                 <Clock aria-hidden="true" />
@@ -93,6 +91,8 @@ export default function HomePage({ kiosk, onCalendar }: Props) {
                 </>
               )}
             </section>
+
+            <NoticeCard notices={kiosk.data?.notices ?? []} />
           </div>
 
           <div className="home-bottom-grid">

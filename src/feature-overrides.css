@@ -184,3 +184,222 @@
     padding: 12px 14px;
   }
 }
+/* 홈 대시보드 가독성 개선: 시간표/급식 2열 + 알림 1열 */
+.home-dashboard {
+  grid-template-rows: minmax(78px, 9dvh) minmax(0, 1fr) minmax(150px, 20dvh);
+  gap: clamp(10px, 1.4dvh, 16px);
+}
+
+.home-info-grid-readable {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1.35fr) minmax(150px, 0.65fr);
+  gap: clamp(10px, 1.4dvh, 16px);
+  min-height: 0;
+}
+
+.home-info-grid-readable > .notice-card {
+  grid-column: 1 / -1;
+  min-height: 0;
+  padding: clamp(16px, 2dvh, 24px);
+}
+
+.home-summary-panel {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: clamp(10px, 1.4dvh, 16px);
+  padding: clamp(16px, 2.2dvh, 26px);
+  overflow: hidden;
+}
+
+.timetable-summary {
+  background: linear-gradient(145deg, rgba(220, 242, 255, 0.68), rgba(255, 253, 249, 0.96) 52%);
+}
+
+.meal-summary {
+  background: linear-gradient(145deg, rgba(255, 238, 205, 0.7), rgba(255, 253, 249, 0.96) 52%);
+}
+
+.home-summary-panel .section-title {
+  flex: 0 0 auto;
+}
+
+.home-summary-panel .section-title h2,
+.home-info-grid-readable > .notice-card .section-title h2 {
+  font-size: clamp(1.28rem, 2.3dvh, 1.9rem);
+}
+
+.home-timetable-list {
+  display: grid;
+  align-content: start;
+  gap: clamp(6px, 0.8dvh, 10px);
+  min-height: 0;
+  margin: 0;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: #9bc7df transparent;
+}
+
+.home-timetable-list li {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: clamp(38px, 4.8dvh, 52px);
+  padding: 7px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.home-timetable-list li span {
+  color: #2c6989;
+  font-size: clamp(0.92rem, 1.55dvh, 1.15rem);
+  font-weight: 900;
+}
+
+.home-timetable-list li strong {
+  min-width: 0;
+  font-size: clamp(1.08rem, 1.95dvh, 1.45rem);
+  line-height: 1.15;
+}
+
+.home-meal-date {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  margin: 0;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: #ffe7b8;
+  color: #79551f;
+  font-size: clamp(0.86rem, 1.45dvh, 1.05rem);
+  font-weight: 900;
+}
+
+.home-meal-list {
+  display: grid;
+  align-content: center;
+  gap: clamp(7px, 1dvh, 11px);
+  min-height: 0;
+  margin: 0;
+  padding: 0 4px 0 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  text-align: center;
+}
+
+.home-meal-list li {
+  font-size: clamp(1.02rem, 1.85dvh, 1.38rem);
+  font-weight: 800;
+  line-height: 1.18;
+}
+
+.home-mini-empty {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.7dvh, 1.25rem);
+  font-weight: 750;
+  text-align: center;
+}
+
+.home-info-grid-readable > .notice-card .notice-list {
+  gap: clamp(6px, 0.8dvh, 10px);
+}
+
+.home-info-grid-readable > .notice-card .notice-list li {
+  min-height: clamp(38px, 4.8dvh, 52px);
+  padding: 7px 12px;
+}
+
+.home-info-grid-readable > .notice-card .notice-list p {
+  font-size: clamp(1.02rem, 1.75dvh, 1.35rem);
+}
+
+.home-info-grid-readable > .notice-card .notice-dot {
+  font-size: 1.55rem;
+}
+
+.home-bottom-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(10px, 1.4dvh, 16px);
+  min-height: 0;
+}
+
+.home-bottom-grid .home-menu-button,
+.home-bottom-grid .dday-card {
+  min-height: 0;
+  height: 100%;
+}
+
+.home-bottom-grid .home-menu-button {
+  background: linear-gradient(180deg, #f5edff, #fffdf9);
+}
+
+.home-bottom-grid .home-menu-icon {
+  width: clamp(54px, 6.5dvh, 74px);
+  font-size: clamp(1.85rem, 3.3dvh, 2.7rem);
+}
+
+.home-bottom-grid .home-menu-button strong {
+  font-size: clamp(1.25rem, 2.15dvh, 1.75rem);
+}
+
+.home-bottom-grid .home-menu-button span:last-child {
+  font-size: clamp(0.88rem, 1.5dvh, 1.05rem);
+}
+
+.home-bottom-grid .dday-card {
+  grid-template-columns: minmax(64px, 0.26fr) minmax(0, 1fr);
+  gap: clamp(12px, 1.6dvh, 18px);
+  padding: clamp(14px, 2dvh, 22px);
+}
+
+.home-bottom-grid .dday-icon {
+  width: clamp(62px, 8dvh, 88px);
+  border-radius: 20px;
+  font-size: clamp(2.1rem, 4dvh, 3.2rem);
+}
+
+.home-bottom-grid .dday-copy span {
+  font-size: clamp(0.82rem, 1.35dvh, 1rem);
+}
+
+.home-bottom-grid .dday-copy h1 {
+  margin: 3px 0 5px;
+  font-size: clamp(1.38rem, 2.55dvh, 2.15rem);
+}
+
+.home-bottom-grid .dday-copy p {
+  font-size: clamp(0.98rem, 1.65dvh, 1.25rem);
+}
+
+.home-loading {
+  grid-row: 2 / 4;
+}
+
+@media (max-width: 640px) {
+  .home-dashboard {
+    grid-template-rows: auto minmax(0, 1fr) minmax(140px, 18dvh);
+  }
+
+  .home-info-grid-readable {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(130px, 0.72fr);
+  }
+
+  .home-info-grid-readable > .notice-card {
+    grid-column: 1;
+  }
+
+  .home-bottom-grid {
+    grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1.2fr);
+  }
+}
