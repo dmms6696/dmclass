@@ -1,16 +1,17 @@
-import { CalendarDays, Home, Trophy } from 'lucide-react';
+import { CalendarDays, Clock, Home, UtensilsCrossed } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import OfflineBadge from './components/OfflineBadge';
 import { useKioskData } from './hooks/useKioskData';
 import AcademicCalendarPage from './pages/AcademicCalendarPage';
 import HomePage from './pages/HomePage';
-import PointRankingPage from './pages/PointRankingPage';
+import MealPage from './pages/MealPage';
+import TimetablePage from './pages/TimetablePage';
 
-type Route = 'home' | 'calendar' | 'ranking';
+type Route = 'home' | 'calendar' | 'timetable' | 'meal';
 
 function routeFromHash(): Route {
   const hash = window.location.hash.replace('#', '');
-  if (hash === 'calendar' || hash === 'ranking') {
+  if (hash === 'calendar' || hash === 'timetable' || hash === 'meal') {
     return hash;
   }
   return 'home';
@@ -32,7 +33,8 @@ export default function App() {
 
   const goHome = () => setRoute('home');
   const goCalendar = () => setRoute('calendar');
-  const goRanking = () => setRoute('ranking');
+  const goTimetable = () => setRoute('timetable');
+  const goMeal = () => setRoute('meal');
 
   return (
     <main className="app-shell" aria-live="polite">
@@ -52,7 +54,8 @@ export default function App() {
         <HomePage
           kiosk={kiosk}
           onCalendar={goCalendar}
-          onRanking={goRanking}
+          onTimetable={goTimetable}
+          onMeal={goMeal}
         />
       )}
 
@@ -65,12 +68,21 @@ export default function App() {
         />
       )}
 
-      {route === 'ranking' && (
-        <PointRankingPage
-          ranking={kiosk.data?.pointRanking ?? []}
+      {route === 'timetable' && (
+        <TimetablePage
+          timetable={kiosk.data?.timetable ?? []}
           onHome={goHome}
           statusMessage={kiosk.statusMessage}
-          actionIcon={<Trophy aria-hidden="true" />}
+          actionIcon={<Clock aria-hidden="true" />}
+        />
+      )}
+
+      {route === 'meal' && (
+        <MealPage
+          meal={kiosk.data?.todayMeal ?? null}
+          onHome={goHome}
+          statusMessage={kiosk.statusMessage}
+          actionIcon={<UtensilsCrossed aria-hidden="true" />}
         />
       )}
     </main>

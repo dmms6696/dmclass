@@ -22,10 +22,15 @@ export type AcademicEvent = {
   order: number;
 };
 
-export type PointRank = {
-  rank: number;
-  displayName: string;
-  totalPoints: number;
+export type TimetableItem = {
+  period: string;
+  subject: string;
+};
+
+export type TodayMeal = {
+  date: string;
+  dateLabel: string;
+  menu: string[];
 };
 
 export type KioskData = {
@@ -35,7 +40,8 @@ export type KioskData = {
   dday: DDay | null;
   notices: Notice[];
   academicEvents: AcademicEvent[];
-  pointRanking: PointRank[];
+  timetable: TimetableItem[];
+  todayMeal: TodayMeal | null;
 };
 
 export type KioskError = {

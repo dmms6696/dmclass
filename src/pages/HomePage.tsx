@@ -1,4 +1,4 @@
-import { CalendarDays, Trophy } from 'lucide-react';
+import { CalendarDays, Clock, UtensilsCrossed } from 'lucide-react';
 import DateTimeHeader from '../components/DateTimeHeader';
 import DDayCard from '../components/DDayCard';
 import HomeMenuButton from '../components/HomeMenuButton';
@@ -16,10 +16,11 @@ type KioskState = {
 type Props = {
   kiosk: KioskState;
   onCalendar: () => void;
-  onRanking: () => void;
+  onTimetable: () => void;
+  onMeal: () => void;
 };
 
-export default function HomePage({ kiosk, onCalendar, onRanking }: Props) {
+export default function HomePage({ kiosk, onCalendar, onTimetable, onMeal }: Props) {
   if (!kiosk.apiConfigured) {
     return (
       <section className="setup-screen">
@@ -53,7 +54,7 @@ export default function HomePage({ kiosk, onCalendar, onRanking }: Props) {
         </>
       )}
 
-      <nav className="home-actions" aria-label="키오스크 메뉴">
+      <nav className="home-actions home-actions-three" aria-label="키오스크 메뉴">
         <HomeMenuButton
           icon={<CalendarDays aria-hidden="true" />}
           title="학사 일정"
@@ -61,10 +62,16 @@ export default function HomePage({ kiosk, onCalendar, onRanking }: Props) {
           onClick={onCalendar}
         />
         <HomeMenuButton
-          icon={<Trophy aria-hidden="true" />}
-          title="포인트 순위"
+          icon={<Clock aria-hidden="true" />}
+          title="오늘의 시간표"
           subtitle="확인"
-          onClick={onRanking}
+          onClick={onTimetable}
+        />
+        <HomeMenuButton
+          icon={<UtensilsCrossed aria-hidden="true" />}
+          title="오늘의 급식"
+          subtitle="확인"
+          onClick={onMeal}
         />
       </nav>
 
