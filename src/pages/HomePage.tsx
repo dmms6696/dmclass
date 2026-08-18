@@ -16,11 +16,13 @@ type KioskState = {
 type Props = {
   kiosk: KioskState;
   onCalendar: () => void;
-  onTimetable: () => void;
-  onMeal: () => void;
 };
 
-export default function HomePage({ kiosk, onCalendar, onTimetable, onMeal }: Props) {
+function periodLabel(period: string) {
+  return /교시$/.test(period) ? period : `${period}교시`;
+}
+
+export default function HomePage({ kiosk, onCalendar }: Props) {
   if (!kiosk.apiConfigured) {
     return (
       <section className="setup-screen">
@@ -37,43 +39,73 @@ export default function HomePage({ kiosk, onCalendar, onTimetable, onMeal }: Pro
   }
 
   const upcomingDday = selectUpcomingAcademicEventDday(kiosk.data?.academicEvents ?? []);
+  const timetable = kiosk.data?.timetable ?? [];
+  const todayMeal = kiosk.data?.todayMeal ?? null;
 
   return (
-    <section className="home-page">
+    <section className="home-page home-dashboard">
       <DateTimeHeader />
 
       {kiosk.isLoading && !kiosk.data ? (
-        <div className="loading-panel panel">
+        <div className="loading-panel panel home-loading">
           <strong>정보를 불러오는 중이에요...</strong>
           <span>잠시만 기다려 주세요.</span>
         </div>
       ) : (
         <>
-          <DDayCard dday={upcomingDday} />
-          <NoticeCard notices={kiosk.data?.notices ?? []} />
+          <div className="home-info-grid">
+            <NoticeCard notices={kiosk.data?.notices ?? []} />
+
+            <section className="home-summary-panel timetable-summary panel" aria-label="오늘의 시간표">
+              <div className="section-title">
+                <Clock aria-hidden="true" />
+                <h2>오늘의 시간표</h2>
+              </div>
+              {timetable.length === 0 ? (
+                <div className="home-mini-empty">등록된 시간표가 없어요.</div>
+              ) : (
+                <ol className="home-timetable-list">
+                  {timetable.map((item, index) => (
+                    <li key={`${item.period}-${item.subject}-${index}`}>
+                      <span>{periodLabel(item.period)}</span>
+                      <strong>{item.subject}</strong>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+
+            <section className="home-summary-panel meal-summary panel" aria-label="오늘의 급식">
+              <div className="section-title">
+                <UtensilsCrossed aria-hidden="true" />
+                <h2>오늘의 급식</h2>
+              </div>
+              {!todayMeal || todayMeal.menu.length === 0 ? (
+                <div className="home-mini-empty">오늘 등록된 급식이 없어요.</div>
+              ) : (
+                <>
+                  <p className="home-meal-date">{todayMeal.dateLabel || todayMeal.date.replaceAll('-', '.')}</p>
+                  <ul className="home-meal-list">
+                    {todayMeal.menu.map((item, index) => (
+                      <li key={`${item}-${index}`}>{item}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </section>
+          </div>
+
+          <div className="home-bottom-grid">
+            <HomeMenuButton
+              icon={<CalendarDays aria-hidden="true" />}
+              title="학사 일정"
+              subtitle="전체 일정 보기"
+              onClick={onCalendar}
+            />
+            <DDayCard dday={upcomingDday} />
+          </div>
         </>
       )}
-
-      <nav className="home-actions home-actions-three" aria-label="키오스크 메뉴">
-        <HomeMenuButton
-          icon={<CalendarDays aria-hidden="true" />}
-          title="학사 일정"
-          subtitle="확인"
-          onClick={onCalendar}
-        />
-        <HomeMenuButton
-          icon={<Clock aria-hidden="true" />}
-          title="오늘의 시간표"
-          subtitle="확인"
-          onClick={onTimetable}
-        />
-        <HomeMenuButton
-          icon={<UtensilsCrossed aria-hidden="true" />}
-          title="오늘의 급식"
-          subtitle="확인"
-          onClick={onMeal}
-        />
-      </nav>
 
       {!kiosk.isLoading && kiosk.statusMessage && <p className="home-status">{kiosk.statusMessage}</p>}
     </section>

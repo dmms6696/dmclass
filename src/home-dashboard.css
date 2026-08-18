@@ -1,0 +1,262 @@
+/* 홈 대시보드: 상단 날짜/시간, 중앙 3열 정보, 하단 학사일정 + D-day */
+.home-dashboard {
+  grid-template-rows: minmax(78px, 0.12fr) minmax(0, 1fr) minmax(150px, 0.28fr);
+  gap: clamp(10px, 1.5dvh, 16px);
+}
+
+.home-loading {
+  grid-row: 2 / 4;
+}
+
+.home-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 1.4dvh, 14px);
+  min-height: 0;
+}
+
+.home-info-grid > .panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.home-info-grid .notice-card,
+.home-summary-panel {
+  gap: clamp(9px, 1.2dvh, 13px);
+  padding: clamp(14px, 1.9dvh, 22px);
+}
+
+.home-info-grid .section-title {
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.home-info-grid .section-title h2 {
+  font-size: clamp(1.08rem, 2.15dvh, 1.62rem);
+  line-height: 1.08;
+}
+
+.home-info-grid .section-title svg {
+  flex: 0 0 auto;
+  color: #6f5a94;
+}
+
+.home-info-grid .notice-list {
+  gap: 8px;
+  padding-right: 3px;
+}
+
+.home-info-grid .notice-list li {
+  grid-template-columns: 28px minmax(0, 1fr);
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 14px;
+}
+
+.home-info-grid .notice-dot {
+  font-size: 1.35rem;
+}
+
+.home-info-grid .notice-list p {
+  font-size: clamp(0.96rem, 1.72dvh, 1.24rem);
+  line-height: 1.28;
+}
+
+.home-summary-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.timetable-summary {
+  background: linear-gradient(160deg, rgba(219, 240, 252, 0.72), rgba(255, 253, 249, 0.96) 45%);
+}
+
+.home-timetable-list {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 3px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: #9bc7df transparent;
+}
+
+.home-timetable-list li {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 7px 9px;
+  border: 1px solid rgba(71, 123, 153, 0.1);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.home-timetable-list span {
+  display: grid;
+  place-items: center;
+  min-height: 28px;
+  padding: 4px 5px;
+  border-radius: 9px;
+  background: #d9effb;
+  color: #245f7f;
+  font-size: clamp(0.78rem, 1.38dvh, 0.96rem);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.home-timetable-list strong {
+  min-width: 0;
+  font-size: clamp(1rem, 1.82dvh, 1.28rem);
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+}
+
+.meal-summary {
+  background: linear-gradient(160deg, rgba(255, 237, 202, 0.76), rgba(255, 253, 249, 0.96) 46%);
+}
+
+.home-meal-date {
+  align-self: flex-start;
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #ffe7b8;
+  color: #79551f;
+  font-size: clamp(0.8rem, 1.38dvh, 0.98rem);
+  font-weight: 900;
+}
+
+.home-meal-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 3px 0 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: #d5af6a transparent;
+}
+
+.home-meal-list li {
+  padding: 8px 10px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.68);
+  font-size: clamp(0.98rem, 1.78dvh, 1.24rem);
+  font-weight: 800;
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
+.home-mini-empty {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: clamp(0.92rem, 1.65dvh, 1.12rem);
+  font-weight: 750;
+}
+
+.home-bottom-grid {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.72fr) minmax(0, 1.28fr);
+  gap: clamp(10px, 1.4dvh, 14px);
+  min-height: 0;
+}
+
+.home-bottom-grid .home-menu-button,
+.home-bottom-grid .dday-card {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.home-bottom-grid .home-menu-button {
+  background: linear-gradient(155deg, #eee5ff, #fffdf9 72%);
+}
+
+.home-bottom-grid .home-menu-icon {
+  width: clamp(52px, 6.7dvh, 72px);
+  border-radius: 18px;
+  font-size: clamp(1.8rem, 3.5dvh, 2.7rem);
+}
+
+.home-bottom-grid .home-menu-button strong {
+  font-size: clamp(1.18rem, 2.25dvh, 1.72rem);
+}
+
+.home-bottom-grid .home-menu-button span:last-child {
+  font-size: clamp(0.82rem, 1.5dvh, 1.02rem);
+}
+
+.home-bottom-grid .dday-card {
+  grid-template-columns: minmax(62px, 0.28fr) minmax(0, 1fr);
+  gap: clamp(12px, 1.6dvh, 18px);
+  padding: clamp(14px, 1.9dvh, 22px);
+}
+
+.home-bottom-grid .dday-icon {
+  width: clamp(60px, 8dvh, 86px);
+  border-radius: 20px;
+  font-size: clamp(2rem, 4.1dvh, 3.15rem);
+}
+
+.home-bottom-grid .dday-copy span {
+  font-size: clamp(0.78rem, 1.35dvh, 0.98rem);
+}
+
+.home-bottom-grid .dday-copy h1 {
+  margin: 4px 0 5px;
+  font-size: clamp(1.32rem, 2.55dvh, 2.02rem);
+  line-height: 1.1;
+}
+
+.home-bottom-grid .dday-copy p {
+  font-size: clamp(0.88rem, 1.55dvh, 1.12rem);
+  line-height: 1.22;
+}
+
+.home-bottom-grid .dday-card .empty-state {
+  grid-column: 1 / -1;
+}
+
+.home-bottom-grid .dday-card .empty-state strong {
+  font-size: clamp(1.02rem, 1.8dvh, 1.3rem);
+}
+
+.home-bottom-grid .dday-card .empty-state span {
+  font-size: clamp(0.8rem, 1.35dvh, 0.96rem);
+}
+
+@media (max-width: 820px) {
+  .home-info-grid {
+    gap: 9px;
+  }
+
+  .home-info-grid .notice-card,
+  .home-summary-panel {
+    padding: 13px;
+  }
+
+  .home-timetable-list li {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 7px;
+    padding: 7px;
+  }
+
+  .home-bottom-grid {
+    grid-template-columns: minmax(170px, 0.68fr) minmax(0, 1.32fr);
+  }
+}

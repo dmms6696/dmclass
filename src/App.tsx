@@ -33,8 +33,6 @@ export default function App() {
 
   const goHome = () => setRoute('home');
   const goCalendar = () => setRoute('calendar');
-  const goTimetable = () => setRoute('timetable');
-  const goMeal = () => setRoute('meal');
 
   return (
     <main className="app-shell" aria-live="polite">
@@ -50,14 +48,7 @@ export default function App() {
         message={kiosk.usingCache ? '마지막 저장 정보 사용 중' : undefined}
       />
 
-      {route === 'home' && (
-        <HomePage
-          kiosk={kiosk}
-          onCalendar={goCalendar}
-          onTimetable={goTimetable}
-          onMeal={goMeal}
-        />
-      )}
+      {route === 'home' && <HomePage kiosk={kiosk} onCalendar={goCalendar} />}
 
       {route === 'calendar' && (
         <AcademicCalendarPage
