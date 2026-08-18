@@ -1,4 +1,4 @@
-/* 홈 대시보드: 상단 날짜/시간, 중앙 3열 정보, 하단 학사일정 + D-day */
+﻿/* ????쒕낫?? ?곷떒 ?좎쭨/?쒓컙, 以묒븰 3???뺣낫, ?섎떒 ?숈궗?쇱젙 + D-day */
 .home-dashboard {
   grid-template-rows: minmax(78px, 0.12fr) minmax(0, 1fr) minmax(150px, 0.28fr);
   gap: clamp(10px, 1.5dvh, 16px);
@@ -10,7 +10,7 @@
 
 .home-info-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(10px, 1.4dvh, 14px);
   min-height: 0;
 }
@@ -260,3 +260,4 @@
     grid-template-columns: minmax(170px, 0.68fr) minmax(0, 1.32fr);
   }
 }
+
