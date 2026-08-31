@@ -8,6 +8,8 @@ const SHEETS = {
   dday: '디데이',
   notices: '오늘의알림',
   events: '학사일정',
+  timetable: '시간표',
+  meals: '식단표',
   students: 'Students',
 };
 
@@ -67,6 +69,8 @@ function buildKioskPayload_() {
     dday: readDday_(kioskSpreadsheet, today),
     notices: readNotices_(kioskSpreadsheet, today),
     academicEvents: academicEvents,
+    timetable: readTimetable_(kioskSpreadsheet),
+    todayMeal: readTodayMeal_(kioskSpreadsheet, today),
     pointRanking: readPointRanking_(pointSpreadsheet),
   };
 }
@@ -257,6 +261,43 @@ function readAcademicEvents_(spreadsheet) {
   }).filter(Boolean).sort(function (a, b) {
     return a.date.localeCompare(b.date) || a.order - b.order || a.title.localeCompare(b.title);
   });
+}
+
+function readTimetable_(spreadsheet) {
+  const sheet = spreadsheet.getSheetByName(SHEETS.timetable);
+  if (!sheet) {
+    return [];
+  }
+  return rowsWithHeader_(sheet, 1).map(function (row) {
+    if (!row['교시'] || !row['과목']) {
+      return null;
+    }
+    return { period: String(row['교시']).trim(), subject: String(row['과목']).trim() };
+  }).filter(Boolean);
+}
+
+function readTodayMeal_(spreadsheet, today) {
+  const sheet = spreadsheet.getSheetByName(SHEETS.meals);
+  if (!sheet) {
+    return null;
+  }
+  const todayParts = today.split('-');
+  const todayMonthDay = Number(todayParts[1]) + '/' + Number(todayParts[2]);
+  const row = rowsWithHeader_(sheet, 1).find(function (item) {
+    const rawDate = item['날짜'];
+    const fullDate = dateKey_(rawDate);
+    return fullDate === today || (!fullDate && String(rawDate || '').trim() === todayMonthDay);
+  });
+  if (!row || !row['식단']) {
+    return null;
+  }
+  return {
+    date: today,
+    dateLabel: Number(todayParts[1]) + '월 ' + Number(todayParts[2]) + '일',
+    menu: String(row['식단']).split(/\r?\n/).map(function (item) {
+      return item.trim();
+    }).filter(Boolean),
+  };
 }
 
 function readPointRanking_(spreadsheet) {
