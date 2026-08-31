@@ -64,7 +64,7 @@ function buildKioskPayload_() {
     ok: true,
     generatedAt: formatNowIso_(),
     timezone: TIMEZONE,
-    dday: buildUpcomingEventDday_(academicEvents, today),
+    dday: readDday_(kioskSpreadsheet, today),
     notices: readNotices_(kioskSpreadsheet, today),
     academicEvents: academicEvents,
     pointRanking: readPointRanking_(pointSpreadsheet),
@@ -175,42 +175,40 @@ function yesNoRule_() {
     .build();
 }
 
-function buildUpcomingEventDday_(events, today) {
-  const upcomingEvents = events.filter(function (event) {
-    return event.date >= today;
-  }).sort(function (a, b) {
-    return a.date.localeCompare(b.date) || a.order - b.order || a.title.localeCompare(b.title);
-  });
-
-  if (upcomingEvents.length === 0) {
+function readDday_(spreadsheet, today) {
+  const sheet = spreadsheet.getSheetByName(SHEETS.dday);
+  if (!sheet) {
     return null;
   }
 
-  const selected = upcomingEvents[0];
+  const upcomingDdays = rowsWithHeader_(sheet, 1).map(function (row) {
+    const targetDate = dateKey_(row['목표일']);
+    if (!isYes_(row['사용']) || !row['제목'] || !targetDate || targetDate < today) {
+      return null;
+    }
+    return {
+      title: String(row['제목']).trim(),
+      targetDate: targetDate,
+      icon: String(row['아이콘'] || '⭐').trim(),
+      memo: String(row['메모'] || '').trim(),
+      priority: toNumber_(row['우선순위'], 999),
+    };
+  }).filter(Boolean).sort(function (a, b) {
+    return a.priority - b.priority || a.targetDate.localeCompare(b.targetDate) || a.title.localeCompare(b.title);
+  });
+
+  if (upcomingDdays.length === 0) {
+    return null;
+  }
+
+  const selected = upcomingDdays[0];
   return {
     title: selected.title,
-    targetDate: selected.date,
-    label: ddayLabel_(today, selected.date),
-    icon: academicEventIcon_(selected.category),
-    memo: selected.details || selected.category,
+    targetDate: selected.targetDate,
+    label: ddayLabel_(today, selected.targetDate),
+    icon: selected.icon,
+    memo: selected.memo,
   };
-}
-
-function academicEventIcon_(category) {
-  const normalized = String(category || '').trim();
-  if (normalized.indexOf('시험') >= 0) {
-    return '📝';
-  }
-  if (normalized.indexOf('행사') >= 0) {
-    return '🎉';
-  }
-  if (normalized.indexOf('방학') >= 0 || normalized.indexOf('휴업') >= 0) {
-    return '☀️';
-  }
-  if (normalized.indexOf('학교') >= 0) {
-    return '🏫';
-  }
-  return '📅';
 }
 
 function readNotices_(spreadsheet, today) {

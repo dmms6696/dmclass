@@ -4,7 +4,6 @@ import DDayCard from '../components/DDayCard';
 import HomeMenuButton from '../components/HomeMenuButton';
 import NoticeCard from '../components/NoticeCard';
 import type { KioskData } from '../types/kiosk';
-import { selectUpcomingAcademicEventDday } from '../utils/dday';
 
 type KioskState = {
   data: KioskData | null;
@@ -38,7 +37,6 @@ export default function HomePage({ kiosk, onCalendar }: Props) {
     );
   }
 
-  const upcomingDday = selectUpcomingAcademicEventDday(kiosk.data?.academicEvents ?? []);
   const timetable = kiosk.data?.timetable ?? [];
   const todayMeal = kiosk.data?.todayMeal ?? null;
 
@@ -102,7 +100,7 @@ export default function HomePage({ kiosk, onCalendar }: Props) {
               subtitle="전체 일정 보기"
               onClick={onCalendar}
             />
-            <DDayCard dday={upcomingDday} />
+            <DDayCard dday={kiosk.data?.dday} />
           </div>
         </>
       )}
