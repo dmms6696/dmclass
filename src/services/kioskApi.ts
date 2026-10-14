@@ -106,6 +106,12 @@ function validateApiResponse(payload: unknown): KioskData {
 
   const timetable = response.timetable ?? [];
   const todayMeal = response.todayMeal ?? null;
+  const basicTimetable = response.basicTimetable ?? [];
+  const mealImage = response.mealImage ?? null;
+  if (!Array.isArray(basicTimetable) || !basicTimetable.every(row => row && typeof row.period === 'string' && Array.isArray(row.subjects) && row.subjects.length === 5 && row.subjects.every(subject => typeof subject === 'string'))
+    || (mealImage !== null && (typeof mealImage.url !== 'string' || !/^https?:\/\//i.test(mealImage.url) || typeof mealImage.title !== 'string'))) {
+    throw new Error('기초시간표 또는 식단표 이미지 형식이 올바르지 않아요.');
+  }
   if (!isTimetable(timetable) || !isTodayMeal(todayMeal)) {
     throw new Error('시간표 또는 급식 데이터 형식이 올바르지 않아요.');
   }
@@ -114,5 +120,7 @@ function validateApiResponse(payload: unknown): KioskData {
     ...response,
     timetable,
     todayMeal,
+    basicTimetable,
+    mealImage,
   };
 }

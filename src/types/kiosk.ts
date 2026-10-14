@@ -42,6 +42,8 @@ export type KioskData = {
   academicEvents: AcademicEvent[];
   timetable: TimetableItem[];
   todayMeal: TodayMeal | null;
+  basicTimetable?: { period: string; subjects: string[] }[];
+  mealImage?: { url: string; title: string } | null;
 };
 
 export type KioskError = {

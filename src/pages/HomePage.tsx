@@ -15,13 +15,15 @@ type KioskState = {
 type Props = {
   kiosk: KioskState;
   onCalendar: () => void;
+  onBasicTimetable: () => void;
+  onMealImage: () => void;
 };
 
 function periodLabel(period: string) {
   return /교시$/.test(period) ? period : `${period}교시`;
 }
 
-export default function HomePage({ kiosk, onCalendar }: Props) {
+export default function HomePage({ kiosk, onCalendar, onBasicTimetable, onMealImage }: Props) {
   if (!kiosk.apiConfigured) {
     return (
       <section className="setup-screen">
@@ -101,6 +103,8 @@ export default function HomePage({ kiosk, onCalendar }: Props) {
               onClick={onCalendar}
             />
             <DDayCard dday={kiosk.data?.dday} />
+            <HomeMenuButton icon={<Clock aria-hidden="true" />} title="시간표" subtitle="월~금 기초시간표" onClick={onBasicTimetable} />
+            <HomeMenuButton icon={<UtensilsCrossed aria-hidden="true" />} title="식단표" subtitle="월간 식단표 보기" onClick={onMealImage} />
           </div>
         </>
       )}

@@ -10,6 +10,8 @@ const SHEETS = {
   events: '학사일정',
   timetable: '시간표',
   meals: '식단표',
+  basicTimetable: '기초시간표',
+  mealImage: '식단표 이미지',
   students: 'Students',
 };
 
@@ -17,6 +19,7 @@ function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('학급 키오스크')
     .addItem('시트 초기 구성', 'setupKioskSpreadsheet')
+    .addItem('기초시간표·식단표 이미지 탭 구성', 'setupOverviewSheets')
     .addToUi();
 }
 
@@ -32,6 +35,7 @@ function setupKioskSpreadsheet() {
   configureDdaySheet_(ddaySheet);
   configureNoticeSheet_(noticeSheet);
   configureEventSheet_(eventSheet);
+  setupOverviewSheets();
 
   SpreadsheetApp.getUi().alert('학급 키오스크 시트 초기 구성이 완료되었습니다.');
 }
@@ -40,11 +44,11 @@ function doGet(e) {
   const callback = e && e.parameter ? String(e.parameter.callback || '') : '';
   try {
     const cache = CacheService.getScriptCache();
-    const cached = cache.get('kiosk-api-v1');
+    const cached = cache.get('kiosk-api-v2');
     const payload = cached ? JSON.parse(cached) : buildKioskPayload_();
 
     if (!cached) {
-      cache.put('kiosk-api-v1', JSON.stringify(payload), CACHE_SECONDS);
+      cache.put('kiosk-api-v2', JSON.stringify(payload), CACHE_SECONDS);
     }
 
     return createResponse_(payload, callback);
@@ -71,6 +75,8 @@ function buildKioskPayload_() {
     academicEvents: academicEvents,
     timetable: readTimetable_(kioskSpreadsheet),
     todayMeal: readTodayMeal_(kioskSpreadsheet, today),
+    basicTimetable: readBasicTimetable_(kioskSpreadsheet),
+    mealImage: readMealImage_(kioskSpreadsheet),
     pointRanking: readPointRanking_(pointSpreadsheet),
   };
 }
@@ -489,4 +495,63 @@ function createResponse_(payload, callback) {
 
 function pad2_(value) {
   return String(value).padStart(2, '0');
+}
+
+// Only initializes the two new tabs; existing daily data is preserved.
+function setupOverviewSheets() {
+  const spreadsheet = SpreadsheetApp.openById(KIOSK_SPREADSHEET_ID);
+  const timetable = ensureSheet_(spreadsheet, SHEETS.basicTimetable);
+  if (isSheetEmpty_(timetable)) {
+    timetable.getRange('A1:F1').setValues([['교시', '월', '화', '수', '목', '금']]).setFontWeight('bold').setBackground('#d9effb');
+    timetable.getRange('A2:A8').setValues([[1], [2], [3], [4], [5], [6], [7]]);
+    timetable.setFrozenRows(1);
+    timetable.setColumnWidths(1, 6, 100);
+  }
+  const image = ensureSheet_(spreadsheet, SHEETS.mealImage);
+  if (isSheetEmpty_(image)) {
+    image.getRange('A1:B1').setValues([['제목', '이미지']]).setFontWeight('bold').setBackground('#ffe7b8');
+    image.getRange('B2').setNote('삽입 > 이미지 > 셀 내 이미지로 월간 식단표를 넣으세요. IMAGE("https://...") 또는 이미지 URL도 가능합니다. 셀 위 이미지는 지원하지 않습니다.');
+    image.setColumnWidth(1, 160);
+    image.setColumnWidth(2, 500);
+    image.setRowHeight(2, 400);
+  }
+  CacheService.getScriptCache().remove('kiosk-api-v2');
+}
+
+function readBasicTimetable_(spreadsheet) {
+  const sheet = spreadsheet.getSheetByName(SHEETS.basicTimetable);
+  if (!sheet) return [];
+  return rowsWithHeader_(sheet, 1).map(function (row) {
+    const period = String(row['교시'] || '').trim();
+    const subjects = ['월', '화', '수', '목', '금'].map(function (day) {
+      return String(row[day] || row[day + '요일'] || '').trim();
+    });
+    return period && subjects.some(Boolean) ? { period: period, subjects: subjects } : null;
+  }).filter(Boolean);
+}
+
+function readMealImage_(spreadsheet) {
+  const sheet = spreadsheet.getSheetByName(SHEETS.mealImage);
+  if (!sheet) return null;
+  // Preferred layout: A1 title header, B1 image header, A2 title, B2 image.
+  // A1/A2 images are also accepted for sheets without headers.
+  const range = sheet.getRange('A1:D10');
+  const values = range.getValues();
+  const formulas = range.getFormulas();
+  for (let r = 0; r < values.length; r += 1) {
+    for (let c = 0; c < values[r].length; c += 1) {
+      const cell = values[r][c];
+      let url = '';
+      if (cell && cell.valueType === SpreadsheetApp.ValueType.IMAGE) {
+        url = cell.getContentUrl();
+      } else {
+        const formulaMatch = String(formulas[r][c] || '').match(/^=IMAGE\(\s*"([^"]+)"/i);
+        url = formulaMatch ? formulaMatch[1] : String(cell || '').trim();
+      }
+      if (!/^https?:\/\//i.test(url)) continue;
+      const title = c > 0 && typeof values[r][0] === 'string' && !/^https?:\/\//i.test(values[r][0]) ? values[r][0].trim() : '';
+      return { url: url, title: title || '월간 식단표' };
+    }
+  }
+  return null;
 }

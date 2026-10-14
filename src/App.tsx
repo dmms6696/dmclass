@@ -6,12 +6,13 @@ import AcademicCalendarPage from './pages/AcademicCalendarPage';
 import HomePage from './pages/HomePage';
 import MealPage from './pages/MealPage';
 import TimetablePage from './pages/TimetablePage';
+import WeeklyOverviewPage from './pages/WeeklyOverviewPage';
 
-type Route = 'home' | 'calendar' | 'timetable' | 'meal';
+type Route = 'home' | 'calendar' | 'timetable' | 'meal' | 'basic-timetable' | 'meal-image';
 
 function routeFromHash(): Route {
   const hash = window.location.hash.replace('#', '');
-  if (hash === 'calendar' || hash === 'timetable' || hash === 'meal') {
+  if (hash === 'calendar' || hash === 'timetable' || hash === 'meal' || hash === 'basic-timetable' || hash === 'meal-image') {
     return hash;
   }
   return 'home';
@@ -48,7 +49,10 @@ export default function App() {
         message={kiosk.usingCache ? '마지막 저장 정보 사용 중' : undefined}
       />
 
-      {route === 'home' && <HomePage kiosk={kiosk} onCalendar={goCalendar} />}
+      {route === 'home' && <HomePage kiosk={kiosk} onCalendar={goCalendar} onBasicTimetable={() => setRoute('basic-timetable')} onMealImage={() => setRoute('meal-image')} />}
+      {(route === 'basic-timetable' || route === 'meal-image') && (
+        <WeeklyOverviewPage key={route} mode={route} data={kiosk.data} onHome={goHome} />
+      )}
 
       {route === 'calendar' && (
         <AcademicCalendarPage
